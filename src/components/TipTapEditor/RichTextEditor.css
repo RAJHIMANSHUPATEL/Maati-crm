@@ -1,0 +1,39 @@
+.editor-container {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 0;
+  background: #fff;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.toolbar button {
+  background: transparent;
+  border: 1px solid #ced4da;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.toolbar button.is-active {
+  background-color: #007bff;
+  color: white;
+}
+
+.editor {
+  min-height: 250px;
+  padding: 12px;
+}
+
+p{
+    height: 300px;
+    padding: 10px;
+}

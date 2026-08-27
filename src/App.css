@@ -1,0 +1,17 @@
+.avatar-circle {
+  border-radius: 50% !important;
+  /* force perfect circle */
+  object-fit: cover;
+  /* ensures the image fills the circle */
+}
+
+.responsive-avatar {
+  width: 100%;
+  /* max-width: 60px; */
+  /* or whatever size you need */
+  height: 100%;
+}
+
+.avatar-img{
+  height: 100% !important;
+}
