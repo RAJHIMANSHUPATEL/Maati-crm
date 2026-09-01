@@ -16,6 +16,7 @@ const CreateNewCoupon = ({
   errors,
   handleSubmit,
   storeList,
+  storeLocked = false,
 }) => {
   return (
     <div className="p-4">
@@ -44,6 +45,7 @@ const CreateNewCoupon = ({
               value={formData.store}
               onChange={handleChange}
               invalid={!!errors.store}
+              disabled={storeLocked}
             >
               <option value="">-- Select Store --</option>
               {storeList.map((store) => (

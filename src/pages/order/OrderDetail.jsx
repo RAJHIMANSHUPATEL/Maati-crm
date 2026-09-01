@@ -111,7 +111,15 @@ const OrderDetail = () => {
             )}
           </p>
           <p>Address: {order.address}</p>
+          <p>Platform: {order.order_platform === "pos" ? "POS" : "Web"}</p>
           <p>Payment: {order.payment_mode} ({order.payment_status})</p>
+          {order.order_platform === "pos" ? (
+            <>
+              <p>Cashier: {order.cashier_name || "-"}</p>
+              <p>Tender: ₹{Number(order.tender_amount || 0).toFixed(2)}</p>
+              <p>Change: ₹{Number(order.change_amount || 0).toFixed(2)}</p>
+            </>
+          ) : null}
           <div className="mb-3" style={{ maxWidth: 280 }}>
             <CFormSelect value={status} onChange={(e) => setStatus(e.target.value)}>
               {STATUSES.map((item) => (
@@ -139,9 +147,12 @@ const OrderDetail = () => {
           {items.map((item, idx) => (
             <div key={idx} className="d-flex justify-content-between border-bottom py-2">
               <span>
-                {item.name || item.product} × {item.quantity || 1}
+                {item.name || item.product}{" "}
+                {item.weight
+                  ? `· ${item.weight} ${item.unit || ""}`
+                  : `× ${item.quantity || 1}`}
               </span>
-              <span>₹{Number(item.price || 0).toFixed(2)}</span>
+              <span>₹{Number(item.line_total || item.price || 0).toFixed(2)}</span>
             </div>
           ))}
         </CCardBody>

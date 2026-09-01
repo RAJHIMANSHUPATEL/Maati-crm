@@ -25,6 +25,7 @@ const CreateNewProduct = (
     categoryList = [],
     subCategoryList = [],
     errors = {},
+    storeLocked = false,
   },
   ref
 ) => {
@@ -54,6 +55,7 @@ const CreateNewProduct = (
                 value={formData.store}
                 onChange={handleChange}
                 invalid={!!errors.store}
+                disabled={storeLocked}
               >
                 <option value="">Select Store</option>
                 {storeList.map((store) => (

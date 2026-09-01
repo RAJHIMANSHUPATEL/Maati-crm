@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { CFormSelect, CSpinner, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
+import { CBadge, CFormSelect, CSpinner, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from "@coreui/react";
 import { useNavigate } from "react-router";
 import SearchBar from "../../components/SearchBar";
 import { orderAPI } from "../../api";
+
+const platformLabel = (order) =>
+  order.order_platform === "pos" ? "POS" : "Web";
 
 const ViewOrder = () => {
   const authToken = localStorage.getItem("authToken");
@@ -10,6 +13,7 @@ const ViewOrder = () => {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [platformFilter, setPlatformFilter] = useState("all");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +37,10 @@ const ViewOrder = () => {
       .includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "all" || order.order_status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const platform = order.order_platform === "pos" ? "pos" : "web";
+    const matchesPlatform =
+      platformFilter === "all" || platform === platformFilter;
+    return matchesSearch && matchesStatus && matchesPlatform;
   });
 
   return (
@@ -42,6 +49,15 @@ const ViewOrder = () => {
         <div className="flex-grow-1">
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
+        <CFormSelect
+          value={platformFilter}
+          onChange={(e) => setPlatformFilter(e.target.value)}
+          style={{ maxWidth: 180 }}
+        >
+          <option value="all">All platforms</option>
+          <option value="web">Web</option>
+          <option value="pos">POS</option>
+        </CFormSelect>
         <CFormSelect
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -67,6 +83,7 @@ const ViewOrder = () => {
               <CTableHeaderCell>Order</CTableHeaderCell>
               <CTableHeaderCell>Customer</CTableHeaderCell>
               <CTableHeaderCell>Store</CTableHeaderCell>
+              <CTableHeaderCell>Platform</CTableHeaderCell>
               <CTableHeaderCell>Status</CTableHeaderCell>
               <CTableHeaderCell>Date</CTableHeaderCell>
               <CTableHeaderCell>Total</CTableHeaderCell>
@@ -75,7 +92,7 @@ const ViewOrder = () => {
           <CTableBody>
             {filtered.length === 0 ? (
               <CTableRow>
-                <CTableDataCell colSpan={6} className="text-center">
+                <CTableDataCell colSpan={7} className="text-center">
                   No orders found
                 </CTableDataCell>
               </CTableRow>
@@ -93,6 +110,11 @@ const ViewOrder = () => {
                       : "-"}
                   </CTableDataCell>
                   <CTableDataCell>{order.store_id?.name || "-"}</CTableDataCell>
+                  <CTableDataCell>
+                    <CBadge color={order.order_platform === "pos" ? "dark" : "info"}>
+                      {platformLabel(order)}
+                    </CBadge>
+                  </CTableDataCell>
                   <CTableDataCell className="text-capitalize">
                     {order.order_status}
                   </CTableDataCell>

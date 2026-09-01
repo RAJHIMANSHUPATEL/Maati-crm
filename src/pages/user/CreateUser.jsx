@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { userAPI } from "../../api";
-import { useEffect } from "react";
+import { storeAPI, userAPI } from "../../api";
 import { toast } from "react-toastify";
 import CreateNewUser from "../../components/user/CreateNewUser";
 
@@ -19,8 +18,12 @@ const CreateUser = () => {
     mobile: "",
     country_code: "",
     password: "",
+    type: "manager",
+    stores: [],
+    staff_code: "",
+    staff_pin: "",
   });
-
+  const [storeList, setStoreList] = useState([]);
   const [errors, setErrors] = useState({});
 
   const viewUser = async () => {
@@ -29,6 +32,7 @@ const CreateUser = () => {
 
       if (res.success) {
         const user = res.data;
+        const type = user.type === "admin" ? "owner" : user.type;
         setFormData({
           first_name: user.first_name || "",
           last_name: user.last_name || "",
@@ -36,6 +40,10 @@ const CreateUser = () => {
           gender: user.gender || "",
           mobile: user.mobile || "",
           country_code: user.country_code || "",
+          type: type || "manager",
+          stores: (user.stores || []).map((store) => store._id || store),
+          staff_code: user.staff_code || "",
+          staff_pin: user.staff_pin || "",
         });
       }
     } catch (error) {
@@ -44,6 +52,9 @@ const CreateUser = () => {
   };
 
   useEffect(() => {
+    storeAPI.getStore(authToken).then((res) => {
+      if (res.success) setStoreList(res.data || []);
+    });
     if (isEditMode) viewUser();
   }, []);
 
@@ -55,9 +66,20 @@ const CreateUser = () => {
       [name]: value,
     });
 
-    // Remove error on change
     if (errors[name]) {
       setErrors({ ...errors, [name]: null });
+    }
+  };
+
+  const handleStoreToggle = (storeId) => {
+    setFormData((prev) => {
+      const stores = prev.stores.includes(storeId)
+        ? prev.stores.filter((id) => id !== storeId)
+        : [...prev.stores, storeId];
+      return { ...prev, stores };
+    });
+    if (errors.stores) {
+      setErrors({ ...errors, stores: null });
     }
   };
 
@@ -92,6 +114,22 @@ const CreateUser = () => {
       newErrors.country_code = "Country code is required";
     }
 
+    if (!formData.type) {
+      newErrors.type = "Role is required";
+    }
+
+    if (formData.type === "manager" || formData.type === "cashier") {
+      if (!/^\d{4}$/.test(formData.staff_code || "")) {
+        newErrors.staff_code = "4-digit operator number";
+      }
+      if (!/^\d{4}$/.test(formData.staff_pin || "")) {
+        newErrors.staff_pin = "4-digit PIN";
+      }
+      if (!formData.stores.length) {
+        newErrors.stores = "Assign at least one store";
+      }
+    }
+
     if (!isEditMode) {
       if (!formData.password) {
         newErrors.password = "Password is required";
@@ -116,24 +154,28 @@ const CreateUser = () => {
       return;
     }
 
+    const payload = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      email: formData.email,
+      gender: formData.gender,
+      mobile: formData.mobile,
+      country_code: formData.country_code,
+      type: formData.type,
+      stores: formData.type === "owner" ? [] : formData.stores,
+      staff_code: formData.staff_code || undefined,
+      staff_pin: formData.staff_pin || undefined,
+    };
+
     try {
       let res;
       if (isEditMode) {
-        const updatedPayload = {
-          _id,
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          email: formData.email,
-          gender: formData.gender,
-          mobile: formData.mobile,
-          country_code: formData.country_code,
-        };
-        res = await userAPI.updateUser(updatedPayload, authToken);
+        res = await userAPI.updateUser({ _id, ...payload }, authToken);
       } else {
         res = await userAPI.registerUser(
           {
-            ...formData,
-            type: "admin",
+            ...payload,
+            password: formData.password,
             status: "active",
           },
           authToken
@@ -158,8 +200,10 @@ const CreateUser = () => {
       formData={formData}
       setFormData={setFormData}
       handleChange={handleChange}
+      handleStoreToggle={handleStoreToggle}
       errors={errors}
       handleSubmit={handleSubmit}
+      storeList={storeList}
     />
   );
 };

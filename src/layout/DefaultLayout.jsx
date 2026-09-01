@@ -4,6 +4,7 @@ import { userAPI } from "../api";
 import AppSidebar from "../components/AppSidebar";
 import AppHeader from "../components/header/AppHeader";
 import AppContent from "../components/AppContent";
+import { persistStaff, clearStaff, isOwner, isOwnerOnlyPath } from "../utils/staffSession";
 
 const DefaultLayout = () => {
   const location = useLocation();
@@ -22,17 +23,19 @@ const DefaultLayout = () => {
         const res = await userAPI.verifyUser(token);
 
         if (!res.success) {
-          // Token invalid
           localStorage.removeItem("authToken");
+          clearStaff();
           navigate("/login");
         } else {
-          const userData = await res.message;
-          // You can store user data in context here
-          console.log("User verified", userData);
+          persistStaff(res.data || {});
+          if (!isOwner() && isOwnerOnlyPath(location.pathname)) {
+            navigate("/");
+          }
         }
       } catch (err) {
         console.error("Token verification failed:", err);
         localStorage.removeItem("authToken");
+        clearStaff();
         navigate("/login");
       }
     };

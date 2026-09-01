@@ -3,6 +3,7 @@ import CreateNewCategory from "../../components/category/CreateNewCategory";
 import { useNavigate, useParams } from "react-router";
 import { categoryAPI, storeAPI } from "../../api";
 import { toast } from "react-toastify";
+import { isManager, shouldLockStore } from "../../utils/staffSession";
 
 const CreateCategory = () => {
   const navigate = useNavigate();
@@ -41,6 +42,9 @@ const CreateCategory = () => {
       const res = await storeAPI.getStore(authToken);
       if (res.success) {
         setStoreList(res.data);
+        if (isManager() && res.data[0]?._id) {
+          setFormData((prev) => prev.store ? prev : { ...prev, store: res.data[0]._id });
+        }
       }
     } catch (error) {
       console.error("Error getting store ", error);
@@ -132,6 +136,7 @@ const CreateCategory = () => {
       errors={errors}
       handleSubmit={handleSubmit}
       storeList={storeList}
+      storeLocked={shouldLockStore(storeList)}
     />
   );
 };

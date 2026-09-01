@@ -5,10 +5,10 @@ import {
   CFormLabel,
   CFormFeedback,
   CFormSelect,
-  CFormTextarea,
   CRow,
   CCol,
   CButton,
+  CFormCheck,
 } from "@coreui/react";
 
 const countryCodes = ["+61", "+91", "+1", "+44"];
@@ -17,14 +17,18 @@ const CreateNewUser = ({
   mode,
   formData,
   handleChange,
+  handleStoreToggle,
   errors,
   handleSubmit,
+  storeList = [],
 }) => {
+  const needsStores = formData.type === "manager" || formData.type === "cashier";
+  const showTillFields = formData.type === "owner" || needsStores;
+
   return (
     <div className="p-4">
       <h4>{mode === "edit" ? "Update" : "Create"} User</h4>
       <CForm onSubmit={handleSubmit} encType="multipart/form-data">
-        {/* First & Last Name */}
         <CRow className="mb-3">
           <CCol md={6}>
             <CFormLabel>First Name</CFormLabel>
@@ -50,7 +54,6 @@ const CreateNewUser = ({
           </CCol>
         </CRow>
 
-        {/* Email and Gender */}
         <CRow className="mb-3">
           <CCol md={6}>
             <CFormLabel>Email</CFormLabel>
@@ -80,7 +83,6 @@ const CreateNewUser = ({
           </CCol>
         </CRow>
 
-        {/* Country Code + Mobile Number */}
         <CRow className="mb-3">
           <CCol md={3}>
             <CFormLabel>Country Code</CFormLabel>
@@ -112,6 +114,73 @@ const CreateNewUser = ({
           </CCol>
         </CRow>
 
+        <CRow className="mb-3">
+          <CCol md={6}>
+            <CFormLabel>Role</CFormLabel>
+            <CFormSelect
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              invalid={!!errors.type}
+            >
+              <option value="owner">Owner</option>
+              <option value="manager">Manager</option>
+              <option value="cashier">Cashier</option>
+            </CFormSelect>
+            <CFormFeedback invalid>{errors.type}</CFormFeedback>
+          </CCol>
+          {showTillFields ? (
+            <>
+              <CCol md={3}>
+                <CFormLabel>Operator number</CFormLabel>
+                <CFormInput
+                  type="text"
+                  name="staff_code"
+                  maxLength={4}
+                  value={formData.staff_code}
+                  onChange={handleChange}
+                  invalid={!!errors.staff_code}
+                />
+                <CFormFeedback invalid>{errors.staff_code}</CFormFeedback>
+              </CCol>
+              <CCol md={3}>
+                <CFormLabel>Staff PIN</CFormLabel>
+                <CFormInput
+                  type="password"
+                  name="staff_pin"
+                  maxLength={4}
+                  value={formData.staff_pin}
+                  onChange={handleChange}
+                  invalid={!!errors.staff_pin}
+                />
+                <CFormFeedback invalid>{errors.staff_pin}</CFormFeedback>
+              </CCol>
+            </>
+          ) : null}
+        </CRow>
+
+        {needsStores ? (
+          <CRow className="mb-3">
+            <CCol>
+              <CFormLabel>Stores</CFormLabel>
+              <div className={errors.stores ? "is-invalid" : ""}>
+                {storeList.map((store) => (
+                  <CFormCheck
+                    key={store._id}
+                    id={`store-${store._id}`}
+                    label={store.name}
+                    checked={(formData.stores || []).includes(store._id)}
+                    onChange={() => handleStoreToggle(store._id)}
+                  />
+                ))}
+              </div>
+              {errors.stores ? (
+                <div className="invalid-feedback d-block">{errors.stores}</div>
+              ) : null}
+            </CCol>
+          </CRow>
+        ) : null}
+
         {mode !== "edit" && (
           <CRow className="mb-3">
             <CCol md={6}>
@@ -128,7 +197,6 @@ const CreateNewUser = ({
           </CRow>
         )}
 
-        {/* Submit */}
         <CButton color="primary" type="submit">
           {mode === "edit" ? "Update User" : "Create User"}
         </CButton>

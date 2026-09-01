@@ -13,6 +13,7 @@ import {
 import { AppSidebarNav } from "./AppSidebarNav";
 import navigation from "../_nav";
 import { set } from "../features/mainSlice/mainSlice";
+import { navForRole } from "../utils/staffSession";
 
 const AppSidebar = () => {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const AppSidebar = () => {
           onClick={() => dispatch(set({ sidebarShow: false }))}
         />
       </CSidebarHeader>
-      <AppSidebarNav items={navigation} />
+      <AppSidebarNav items={navForRole(navigation)} />
       <CSidebarFooter className="border-top d-none d-lg-flex">
         <CSidebarToggler
           onClick={() => dispatch(set({ sidebarUnfoldable: !unfoldable }))}

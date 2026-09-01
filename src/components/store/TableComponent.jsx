@@ -17,6 +17,7 @@ import { storeAPI } from "../../api";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { resolveImageUrl } from "../../utils/imageUrl";
+import { isOwner } from "../../utils/staffSession";
 
 const TableComponent = ({ stores, setStores }) => {
   const authToken = localStorage.getItem("authToken");
@@ -110,16 +111,21 @@ const TableComponent = ({ stores, setStores }) => {
               <CTableDataCell className="text-center">
                 <CFormSwitch
                   checked={item.status === "active"}
+                  disabled={!isOwner()}
                   onChange={() => handleStatusToggle(item._id, item.status)}
                 />
               </CTableDataCell>
               <CTableDataCell>
-                <CButton
-                  color="primary"
-                  onClick={() => navigate(`/store/${item._id}`)}
-                >
-                  View
-                </CButton>
+                {isOwner() ? (
+                  <CButton
+                    color="primary"
+                    onClick={() => navigate(`/store/${item._id}`)}
+                  >
+                    View
+                  </CButton>
+                ) : (
+                  <span className="text-muted">Assigned</span>
+                )}
               </CTableDataCell>
             </CTableRow>
           ))

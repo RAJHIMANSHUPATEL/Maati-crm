@@ -19,6 +19,7 @@ const CreateNewCategory = ({
   errors,
   handleSubmit,
   storeList,
+  storeLocked = false,
 }) => {
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -54,6 +55,7 @@ const CreateNewCategory = ({
               value={formData.store}
               onChange={handleChange}
               invalid={!!errors.store}
+              disabled={storeLocked}
             >
               <option value="">-- Select Store --</option>
               {storeList.map((store) => (

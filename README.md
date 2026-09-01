@@ -1,4 +1,4 @@
-# GreenFarm CRM
+# Maati CRM
 
 Admin panel (React + Vite + CoreUI).
 
@@ -14,13 +14,18 @@ npm run dev
 `VITE_API_TOKEN` must match backend `API_TOKEN`.
 For local seed images use `VITE_IMAGE_URL=http://localhost:5001/uploads/`.
 
-CRM demo login after `npm run seed` in the backend: `admin@greenfarm.test` / `Admin@123`.
+CRM demo logins after `npm run seed` in the backend:
+
+- Owner: `admin@greenfarm.test` / `Admin@123`
+- Manager (Noida only): `ops@greenfarm.test` / `Admin@123`
 
 ## Build
 
 ```bash
-npm run build
+npm run dev            # local API (Vite mode development)
+npm run build:demo     # demo / portfolio API
+npm run build          # production API
 npm run preview
 ```
 
-Deploy the `dist/` folder to any static host. Configure CORS on the API for this origin.
+Vercel hosts this app. The API stays on Render. See [DEPLOY.md](../DEPLOY.md).

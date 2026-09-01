@@ -51,6 +51,12 @@ const TableComponent = ({ users, setUsers }) => {
             User Name
           </CTableHeaderCell>
           <CTableHeaderCell className="bg-body-tertiary">
+            Role
+          </CTableHeaderCell>
+          <CTableHeaderCell className="bg-body-tertiary">
+            Operator
+          </CTableHeaderCell>
+          <CTableHeaderCell className="bg-body-tertiary">
             <div className="d-flex align-items-center gap-2">
               <span>Email</span>
             </div>
@@ -66,7 +72,7 @@ const TableComponent = ({ users, setUsers }) => {
       <CTableBody>
         {users.length === 0 ? (
           <CTableRow>
-            <CTableDataCell colSpan={5} className="text-center text-muted">
+            <CTableDataCell colSpan={7} className="text-center text-muted">
               No User available
             </CTableDataCell>
           </CTableRow>
@@ -86,7 +92,13 @@ const TableComponent = ({ users, setUsers }) => {
                 />
               </CTableDataCell>
               <CTableDataCell>
-                <div>{item.first_name}</div>
+                <div>{item.first_name} {item.last_name}</div>
+              </CTableDataCell>
+              <CTableDataCell className="text-capitalize">
+                {item.type === "admin" ? "owner" : item.type}
+              </CTableDataCell>
+              <CTableDataCell>
+                {item.staff_code || "-"}
               </CTableDataCell>
               <CTableDataCell>
                 <div>{item.email}</div>

@@ -6,12 +6,14 @@ import {
   CDropdownToggle,
 } from "@coreui/react";
 import { useNavigate } from "react-router";
+import { clearStaff } from "../../utils/staffSession";
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
+    clearStaff();
     navigate("/login");
   };
 

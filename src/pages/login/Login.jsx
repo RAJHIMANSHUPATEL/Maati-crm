@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router";
 import { userAPI } from "../../api";
 import { toast } from "react-toastify";
+import { persistStaff } from "../../utils/staffSession";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const Login = () => {
       });
       if (response.success) {
         localStorage.setItem("authToken", response.authToken);
+        persistStaff(response.data || {});
         toast.success("Login successful!");
         navigate("/");
       } else {

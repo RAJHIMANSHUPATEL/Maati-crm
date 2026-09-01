@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import CreateNewProduct from "../../components/product/CreateNewProduct";
 import { useNavigate, useParams } from "react-router";
 import { categoryAPI, productAPI, storeAPI, subCategoryAPI } from "../../api";
+import { isManager, shouldLockStore } from "../../utils/staffSession";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
@@ -77,6 +78,9 @@ const CreateProduct = () => {
       const res = await storeAPI.getStore(authToken);
       if (res.success) {
         setStoreList(res.data);
+        if (isManager() && res.data[0]?._id) {
+          setFormData((prev) => prev.store ? prev : { ...prev, store: res.data[0]._id });
+        }
       }
     } catch (error) {
       console.error("Error getting store ", error);
@@ -241,6 +245,7 @@ const CreateProduct = () => {
       categoryList={categoryList}
       subCategoryList={subCategoryList}
       errors={errors}
+      storeLocked={shouldLockStore(storeList)}
     />
   );
 };

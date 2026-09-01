@@ -4,6 +4,7 @@ import { CButton, CRow, CCol, CSpinner } from "@coreui/react";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { storeAPI } from "../../api";
+import { isOwner } from "../../utils/staffSession";
 
 const ViewStore = () => {
   const authToken = localStorage.getItem("authToken");
@@ -49,11 +50,13 @@ const ViewStore = () => {
         <CCol xs={12} md={6}>
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
         </CCol>
-        <CCol xs={12} md={6} className="text-md-end mt-3 mt-md-0">
-          <CButton color="primary" onClick={() => navigate("/store/create-new")}>
-            Create New
-          </CButton>
-        </CCol>
+        {isOwner() ? (
+          <CCol xs={12} md={6} className="text-md-end mt-3 mt-md-0">
+            <CButton color="primary" onClick={() => navigate("/store/create-new")}>
+              Create New
+            </CButton>
+          </CCol>
+        ) : null}
       </CRow>
       {/* TableComponent */}
       <div className="mt-3">
