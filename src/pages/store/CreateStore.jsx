@@ -90,7 +90,7 @@ const CreateStore = () => {
     if (formData.commission == null || formData.commission === "")
       newErrors.commission = "Commission is required";
     if (!formData.mobile.trim()) newErrors.mobile = "Mobile Number is required";
-    if (!formData.abn.trim()) newErrors.abn = "ABN Number is required";
+    if (!formData.abn.trim()) newErrors.abn = "GSTIN is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.cover) newErrors.cover = "Image is required";
     if (!formData.email.trim()) {

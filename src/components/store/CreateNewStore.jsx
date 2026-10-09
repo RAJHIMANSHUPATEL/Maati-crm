@@ -11,22 +11,13 @@ import {
 import { CFormSelect } from "@coreui/react";
 import ImageUploader from "../ImageUploader";
 
-const australiaCities = [
-  "Sydney",
-  "Melbourne",
-  "Brisbane",
-  "Perth",
-  "Adelaide",
-  "Canberra",
-  "Hobart",
-  "Darwin",
-  "Gold Coast",
-  "Newcastle",
-  "Wollongong",
-  "Geelong",
-  "Townsville",
-  "Cairns",
-  "Toowoomba",
+const indiaCities = [
+  "Noida",
+  "Delhi",
+  "Ghaziabad",
+  "Greater Noida",
+  "Gurugram",
+  "Faridabad",
 ];
 
 const CreateNewStore = ({
@@ -165,10 +156,9 @@ const CreateNewStore = ({
           </CCol>
         </CRow>
 
-        {/* ABN and City */}
         <CRow className="mb-3">
           <CCol md={6}>
-            <CFormLabel>ABN Number</CFormLabel>
+            <CFormLabel>GSTIN</CFormLabel>
             <CFormInput
               type="text"
               name="abn"
@@ -187,7 +177,7 @@ const CreateNewStore = ({
               invalid={!!errors.city}
             >
               <option value="">Select a city</option>
-              {australiaCities.map((city) => (
+              {indiaCities.map((city) => (
                 <option key={city} value={city}>
                   {city}
                 </option>

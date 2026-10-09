@@ -14,10 +14,12 @@ npm run dev
 `VITE_API_TOKEN` must match backend `API_TOKEN`.
 For local seed images use `VITE_IMAGE_URL=http://localhost:5001/uploads/`.
 
-CRM demo logins after `npm run seed` in the backend:
+Demo logins after `npm run seed` in the backend (same accounts on the hosted demo DB):
 
-- Owner: `admin@greenfarm.test` / `Admin@123`
-- Manager (Noida only): `ops@greenfarm.test` / `Admin@123`
+- Owner (both stores): `admin@maati.test` / `Admin@123`
+- Manager (Noida only): `ops@maati.test` / `Admin@123`
+
+Full demo table: [root README](../README.md).
 
 ## Build
 
@@ -46,4 +48,4 @@ VITE_IMAGE_URL=https://res.cloudinary.com/vdm8qifg/image/upload/
 
 4. Deploy. After you have the `*.vercel.app` URL, add it to Render `CORS_ORIGINS` (or keep `*.vercel.app`) and restart the API.
 
-CRM demo logins: owner `admin@greenfarm.test` / `Admin@123`, manager `ops@greenfarm.test` / `Admin@123`.
+Demo logins: owner `admin@maati.test` / `Admin@123`, manager `ops@maati.test` / `Admin@123`.
